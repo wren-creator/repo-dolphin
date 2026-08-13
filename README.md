@@ -51,14 +51,19 @@ ollama pull nomic-embed-text
 
 ## Usage
 
-```bash
-# build (or rebuild, after any indexed repo changes) the index
-python index.py
+`ask.sh` and `index.sh` handle venv activation for you, that's the whole
+point of them:
 
-# ask a question
-python ask.py "how does the combat system in mud work"
-python ask.py "what's the RACF integration in zstack-monitor"
+```bash
+./index.sh                    # build (or rebuild, after any indexed repo changes) the index
+./ask.sh "how does the combat system in mud work"   # one-shot answer
+./ask.sh                      # interactive session — loads the index once, ask as many questions as you want
 ```
+
+The interactive session (`repl.py` underneath) matters for more than
+convenience: `ask.py` reloads the whole index from disk on every single
+invocation, fine for a one-off question, wasteful for a back-and-forth. The
+session loads once and reuses it.
 
 Edit `config.yaml` to change which repos get indexed — it's a plain list of
 `name`/`path` pairs, not auto-discovered, so you decide what's in scope.

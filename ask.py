@@ -37,12 +37,16 @@ def build_prompt(question: str, hits: list[tuple]) -> str:
     )
 
 
-def ask(question: str, config: dict) -> str:
+def load_store(config: dict) -> VectorStore:
     index_path = ROOT / config["index_path"]
     if not index_path.exists():
         raise SystemExit(f"No index found at {index_path}. Run `python index.py` first.")
+    return VectorStore.load(index_path)
 
-    store = VectorStore.load(index_path)
+
+def answer(question: str, store: VectorStore, config: dict) -> str:
+    """Answers one question against an already-loaded store — the piece repl.py
+    reuses so a session doesn't reload the index from disk on every question."""
     hits = store.search(question, top_k=config.get("top_k", 6))
 
     print("--- retrieved ---", file=sys.stderr)
@@ -60,14 +64,21 @@ def ask(question: str, config: dict) -> str:
     return resp.json()["response"]
 
 
+def ask(question: str, config: dict) -> str:
+    """One-shot convenience: load the store fresh, answer, done. Fine for a
+    single CLI invocation; repl.py calls load_store()/answer() directly
+    instead so a multi-question session only pays the load cost once."""
+    return answer(question, load_store(config), config)
+
+
 def _cli() -> None:
     parser = argparse.ArgumentParser(description="Ask a question about your indexed repos.")
     parser.add_argument("question", nargs="+")
     args = parser.parse_args()
 
     config = load_config()
-    answer = ask(" ".join(args.question), config)
-    print(answer)
+    result = ask(" ".join(args.question), config)
+    print(result)
 
 
 if __name__ == "__main__":
