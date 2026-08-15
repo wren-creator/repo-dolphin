@@ -20,11 +20,6 @@ class VectorStore:
     chunks: list[Chunk]
     vectors: np.ndarray  # (n_chunks, embedding_dim), L2-normalized
 
-    @classmethod
-    def build(cls, chunks: list[Chunk]) -> "VectorStore":
-        vectors = embed_texts([c.text for c in chunks])
-        return cls(chunks=chunks, vectors=vectors)
-
     def search(self, query: str, top_k: int = 6) -> list[tuple[Chunk, float]]:
         if not self.chunks:
             return []

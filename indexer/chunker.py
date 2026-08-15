@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import ast
 import fnmatch
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -56,6 +57,12 @@ def _should_skip_file(path: Path) -> bool:
     except OSError:
         return True
     return False
+
+
+def file_hash(path: Path) -> str:
+    """Content hash used to detect whether a file changed since the last
+    index build, so incremental re-indexing can skip re-embedding it."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def iter_repo_files(repo_root: Path):
@@ -124,10 +131,3 @@ def chunk_file(repo: str, repo_root: Path, path: Path) -> list[Chunk]:
     if path.suffix == ".py":
         return _chunk_python(repo, rel_path, source)
     return _chunk_lines(repo, rel_path, source)
-
-
-def chunk_repo(repo: str, repo_root: Path) -> list[Chunk]:
-    chunks: list[Chunk] = []
-    for path in iter_repo_files(repo_root):
-        chunks.extend(chunk_file(repo, repo_root, path))
-    return chunks

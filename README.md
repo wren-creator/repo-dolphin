@@ -79,7 +79,7 @@ index) to point it at everything.
 
 ## Roadmap
 
-- [ ] Incremental re-indexing (hash files, only re-embed what changed)
+- [x] Incremental re-indexing (hash files, only re-embed what changed)
       instead of a full rebuild every time
 - [ ] Hybrid search (dense + BM25/keyword) for exact identifier lookups
       dense retrieval alone tends to miss
