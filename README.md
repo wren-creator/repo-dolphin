@@ -88,3 +88,9 @@ index) to point it at everything.
 - [ ] LoRA on `dolphin-mistral`, scoped to answer format/citation style —
       only once the pure-RAG baseline is actually in daily use and the gap
       it would close is concrete, not hypothetical
+
+## License
+
+GPLv3, see [LICENSE](LICENSE).
+
+Copyright (C) 2026 Britley Hoff
