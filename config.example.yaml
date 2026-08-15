@@ -1,0 +1,13 @@
+# Which repos to index. Copy this file to config.yaml and edit the list —
+# config.yaml is gitignored since it tends to contain local, machine-specific
+# paths. Re-run `python index.py` after changing this or after any of the
+# listed repos change.
+repos:
+  - name: example-repo
+    path: /path/to/example-repo
+
+index_path: data/index.npz
+
+chat_model: dolphin-mistral
+embed_model: nomic-embed-text
+top_k: 6

@@ -47,6 +47,8 @@ pip install -r requirements.txt
 
 ollama pull dolphin-mistral
 ollama pull nomic-embed-text
+
+cp config.example.yaml config.yaml   # then edit the repo list, config.yaml is gitignored so local paths stay local
 ```
 
 ## Usage
